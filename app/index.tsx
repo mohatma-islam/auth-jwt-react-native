@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -5,9 +6,9 @@ import {
   TextInput,
   Button,
   Pressable,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
-import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -19,7 +20,6 @@ const Login = () => {
 
   const login = async () => {
     const result = await onLogin!(email, password);
-    
     if (result && result.error) {
       alert(result.msg);
     }
@@ -35,37 +35,39 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.form}>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          onChangeText={(text: string) => setEmail(text)}
-          value={email}
-        />
-        <View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <View style={styles.form}>
           <TextInput
             style={styles.input}
-            placeholder="Password"
-            secureTextEntry={!passwordVisible}
-            onChangeText={(text) => setPassword(text)}
-            value={password}
+            placeholder="Email"
+            onChangeText={(text: string) => setEmail(text)}
+            value={email}
           />
-          <Pressable
-            style={styles.iconContainer}
-            onPress={() => setPasswordVisible(!passwordVisible)}
-          >
-            <Ionicons
-              name={passwordVisible ? "eye-outline" : "eye-off-outline"}
-              size={24}
-              color="orange"
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              secureTextEntry={!passwordVisible}
+              onChangeText={(text) => setPassword(text)}
+              value={password}
             />
-          </Pressable>
+            <Pressable
+              style={styles.iconContainer}
+              onPress={() => setPasswordVisible(!passwordVisible)}
+            >
+              <Ionicons
+                name={passwordVisible ? "eye-outline" : "eye-off-outline"}
+                size={24}
+                color="orange"
+              />
+            </Pressable>
+          </View>
+          <Button onPress={login} title="Sign in" />
+          <Button onPress={register} title="Create Account" />
         </View>
-        <Button onPress={login} title="Sign in" />
-        <Button onPress={register} title="Create Account" />
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
