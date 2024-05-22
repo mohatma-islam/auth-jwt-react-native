@@ -70,8 +70,14 @@ const Login = () => {
               />
             </Pressable>
           </View>
-          <Button onPress={login} title="Sign in" />
-          <Button onPress={register} title="Create Account" />
+
+          <Pressable style={styles.button} onPress={login}>
+            <Text style={styles.buttonText}>Log In</Text>
+          </Pressable>
+
+          {/* <Pressable style={styles.button} onPress={register}>
+            <Text style={styles.buttonText}>Create Account</Text>
+          </Pressable> */}
         </View>
       </View>
     // </TouchableWithoutFeedback>
@@ -106,6 +112,20 @@ const styles = StyleSheet.create({
     right: 10,
     height: "100%",
     justifyContent: "center",
+  },
+
+  button: {
+    backgroundColor: 'orange',
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

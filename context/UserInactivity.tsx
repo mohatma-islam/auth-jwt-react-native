@@ -13,8 +13,13 @@ export const UserInactivityProvider = ({children}: any) => {
     useEffect(() => {
         const subscription = AppState.addEventListener('change', handleAppStateChange);
 
+        window.addEventListener('beforeunload', handleTabClose);
+        window.addEventListener('load', handleTabOpen);
+
         return () => {
             subscription.remove();
+            window.removeEventListener('beforeunload', handleTabClose);
+            window.removeEventListener('load', handleTabOpen);
         };
     }, []);
 
@@ -33,19 +38,31 @@ export const UserInactivityProvider = ({children}: any) => {
             const data = await recordStartTime();
             console.log(data);
         } else if (nextAppState === 'active' && appState.current.match(/background/)) {
-            const storedTime = await AsyncStorage.getItem(TIME_KEY);
-            if (storedTime) {
-                const DateTime = Number(storedTime);
-                const elapsed = Date.now() - DateTime;
-                console.log('elapsed:', elapsed);
-
-                if (elapsed > LOCK_TIME) {
-                    router.replace('(modals)/lock');
-                }
-            }
+            await checkLockScreen();
         }
 
         appState.current = nextAppState;
+    };
+
+    const handleTabClose = async (event: any) => {
+        await recordStartTime();
+    };
+
+    const handleTabOpen = async () => {
+        await checkLockScreen();
+    };
+
+    const checkLockScreen = async () => {
+        const storedTime = await AsyncStorage.getItem(TIME_KEY);
+        if (storedTime) {
+            const DateTime = Number(storedTime);
+            const elapsed = Date.now() - DateTime;
+            console.log('elapsed:', elapsed);
+
+            if (elapsed > LOCK_TIME) {
+                router.replace('(modals)/lock');
+            }
+        }
     };
 
     const recordStartTime = async () => {
