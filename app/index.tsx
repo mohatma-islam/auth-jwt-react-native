@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useAuth } from "@/context/AuthContext";
 import { Ionicons } from "@expo/vector-icons";
+import { showMessage } from "react-native-flash-message";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -21,21 +22,27 @@ const Login = () => {
   const login = async () => {
     const result = await onLogin!(email, password);
     if (result && result.error) {
-      alert(result.msg);
+      // alert(result.msg);
+      showMessage({
+        message: result.msg,
+        type: "warning",
+        duration: 3000
+      });
     }
   };
 
   const register = async () => {
     const result = await onRegister!(email, password);
     if (result && result.error) {
-      alert(result.msg);
+      // alert(result.msg);
+
     } else {
       login();
     }
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <View style={styles.form}>
           <TextInput
@@ -67,7 +74,7 @@ const Login = () => {
           <Button onPress={register} title="Create Account" />
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    // </TouchableWithoutFeedback>
   );
 };
 
